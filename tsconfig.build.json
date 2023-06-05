@@ -7,7 +7,7 @@
     "removeComments": true,
     "experimentalDecorators": true,
     "strictPropertyInitialization": false,
-    "mitDecoratorMetadata": true,
+    "emitDecoratorMetadata": true,
     "resolveJsonModule": true,
     "outDir": "./dist",
     "rootDir": "./",
