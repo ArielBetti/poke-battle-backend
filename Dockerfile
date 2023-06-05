@@ -9,7 +9,7 @@ WORKDIR /app
 
 COPY package.json pnpm-lock.yaml* ./
 
-RUN pnpm install --frozen-lockfile --omit=dev
+RUN pnpm install --omit=dev
 
 FROM base AS builder
 
