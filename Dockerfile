@@ -1,14 +1,12 @@
 FROM node:14-alpine AS base
 
-RUN npm i -g pnpm
-
 FROM base AS deps
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-COPY package.json pnpm-lock.yaml* ./
+COPY package.json package-lock.json* ./
 
-RUN pnpm install --omit=dev --network-timeout 60000
+RUN npm ci --only=production
 
 FROM base AS builder
 WORKDIR /app
@@ -17,7 +15,7 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
 RUN mkdir logs
-RUN pnpm build
+RUN npm run build
 
 FROM base AS runner
 WORKDIR /app
