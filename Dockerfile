@@ -35,7 +35,7 @@ COPY --from=builder --chown=expressots:nodejs app/entrypoint.sh app/tsconfig-pat
 
 USER expressots
 
-EXPOSE 3000
+EXPOSE 5000
 
 CMD ["npm", "run", "start:prod"]
 # ENTRYPOINT ["sh", "entrypoint.sh"]
