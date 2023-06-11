@@ -4,7 +4,7 @@ import { provide } from "inversify-binding-decorators";
 @provide(App)
 class App extends Application {
   protected configureServices(): void {
-    Environments.checkAll();
+    // Environments.checkAll();
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
