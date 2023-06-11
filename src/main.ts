@@ -24,7 +24,6 @@ async function Bootstrap() {
       appVersion: ENV.Application.APP_VERSION,
     },
   );
-  console.log(ENV.Application.PORT);
 }
 
 Bootstrap();

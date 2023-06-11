@@ -15,6 +15,7 @@ interface IPokebattleHistoryResponseDTO {
   winnerName: string;
   loserName: string;
   isDraw: boolean;
+  battledIn?: Date;
 }
 
 interface IPokebattleHistoryBattleLogResponseDTO {

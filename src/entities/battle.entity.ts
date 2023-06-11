@@ -29,6 +29,7 @@ class Battle {
   public winnerName: string;
   public loserName: string;
   public isDraw: boolean;
+  public _battledIn: Date;
 
   constructor(
     log: {
@@ -56,6 +57,7 @@ class Battle {
     winnerName: string,
     loserName: string,
     isDraw: boolean,
+    battledIn: Date,
   ) {
     this._id = id ?? randomUUID();
     this.userName = userName;
@@ -66,11 +68,16 @@ class Battle {
     this.winnerName = winnerName;
     this.loserName = loserName;
     this.isDraw = isDraw;
+    this._battledIn = battledIn;
     this.log = log;
   }
 
   get id(): string {
     return this._id;
+  }
+
+  get battledIn(): Date {
+    return this.battledIn;
   }
 
   get playerId(): string {

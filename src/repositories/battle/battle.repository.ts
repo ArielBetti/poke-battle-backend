@@ -16,6 +16,10 @@ class BattleRepository implements IBattleRepository {
   async findAll(id: string): Promise<IBattleDTO[]> {
     this.prismaProvider.mapToPrisma;
     const battles = await prismaClient.battle.findMany({
+      orderBy: {
+        battledIn: "desc",
+      },
+      take: 20,
       where: {
         playerId: id,
       },
@@ -39,7 +43,10 @@ class BattleRepository implements IBattleRepository {
 
   async create(battle: IBattleDTO): Promise<Battle> {
     const createHistory = await prismaClient.battle.create({
-      data: this.prismaProvider.mapToPrisma<IBattleDTO, Battle>(battle),
+      data: this.prismaProvider.mapToPrisma<IBattleDTO, Battle>({
+        ...battle,
+        battledIn: new Date(),
+      }),
     });
 
     const log = createHistory.log as {
@@ -67,6 +74,7 @@ class BattleRepository implements IBattleRepository {
       battle.winnerName,
       battle.loserName,
       battle.isDraw,
+      battle.battledIn || new Date(),
     );
     return newHistory;
   }

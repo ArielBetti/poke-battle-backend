@@ -18,6 +18,7 @@ interface IBattleDTO {
   winnerName: string;
   loserName: string;
   isDraw: boolean;
+  battledIn?: Date;
 }
 
 export { IBattleDTO };

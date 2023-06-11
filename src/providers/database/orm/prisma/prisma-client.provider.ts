@@ -13,6 +13,8 @@ class PrismaClientProvider {
         mappedObject["id"] = value as PrismaType[keyof PrismaType];
       } else if (key === "_password") {
         mappedObject["password"] = value as PrismaType[keyof PrismaType];
+      } else if (key === "_battledIn") {
+        mappedObject["battledIn"] = value as PrismaType[keyof PrismaType];
       } else {
         mappedObject[key as keyof PrismaType] =
           value as PrismaType[keyof PrismaType];

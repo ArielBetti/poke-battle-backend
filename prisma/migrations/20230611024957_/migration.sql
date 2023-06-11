@@ -45,6 +45,7 @@ CREATE TABLE "Battle" (
     "winnerName" TEXT NOT NULL,
     "loserName" TEXT NOT NULL,
     "isDraw" BOOLEAN NOT NULL,
+    "battledIn" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "Battle_pkey" PRIMARY KEY ("id")
 );
