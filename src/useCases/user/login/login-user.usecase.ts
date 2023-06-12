@@ -5,6 +5,7 @@ import { UserRepository } from "@repositories/user/user.repository";
 
 import { comparePasswords } from "@providers/encrypt/bcrypt/compare-passwords.provider";
 import { JWTProvider } from "@providers/encrypt/jwt/jwt.provider";
+import * as z from "zod";
 
 @provide(LoginUserUsecase)
 class LoginUserUsecase {
@@ -14,7 +15,33 @@ class LoginUserUsecase {
   ) {}
 
   async execute(data: ILoginUserDTO): Promise<ILoginUserResponseDTO | null> {
+    const loginSchema = z.object({
+      email: z
+        .string()
+        .nonempty({ message: "Email is required" })
+        .email({ message: "Email format is invalid" }),
+      password: z.string().nonempty({ message: "Password is required" }),
+    });
+
     const { email, password } = data;
+
+    try {
+      await loginSchema.parseAsync({ email, password });
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        Report.Error(
+          new AppError(
+            StatusCode.BadRequest,
+            error.issues
+              .map((validation) => validation.message)
+              .toString()
+              .replace(/,/g, ", "),
+            "login-user-usecase",
+          ),
+        );
+      }
+      throw error;
+    }
 
     const findUser = await this.userRepository.findByEmail(email);
 

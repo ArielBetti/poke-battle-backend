@@ -6,6 +6,7 @@ import { User } from "@entities/user.entity";
 import { IUserAvatarDTO, IUserDTO } from "@repositories/user/user.dto";
 import { JWTProvider } from "@providers/encrypt/jwt/jwt.provider";
 import { stringify } from "qs";
+import * as z from "zod";
 
 @provide(CreateUserUseCase)
 class CreateUserUseCase {
@@ -32,8 +33,26 @@ class CreateUserUseCase {
   };
 
   async execute(data: ICreateUserDTO): Promise<ICreateUserResponseDTO | null> {
+    const createSchema = z.object({
+      name: z.string().nonempty({ message: "Name is required" }),
+      email: z
+        .string()
+        .nonempty({ message: "Email is required" })
+        .email({ message: "Email format is invalid" }),
+      password: z
+        .string()
+        .nonempty({ message: "Password is required" })
+        .min(6, "Password required min 6 characters"),
+    });
+
     try {
       const { name, email, password, avatar } = data;
+
+      await createSchema.parseAsync({
+        name,
+        email,
+        password,
+      });
 
       const findUser = await this.userRepository.findByEmail(email);
 
@@ -85,6 +104,18 @@ class CreateUserUseCase {
 
       return null;
     } catch (error: any) {
+      if (error instanceof z.ZodError) {
+        Report.Error(
+          new AppError(
+            StatusCode.BadRequest,
+            error.issues
+              .map((validation) => validation.message)
+              .toString()
+              .replace(/,/g, ", "),
+            "create-user-usecase",
+          ),
+        );
+      }
       throw error;
     }
   }
