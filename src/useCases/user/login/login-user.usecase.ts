@@ -1,4 +1,4 @@
-import { AppError, Report, StatusCode } from "@expressots/core";
+import { Report, StatusCode } from "@expressots/core";
 import { provide } from "inversify-binding-decorators";
 import { ILoginUserDTO, ILoginUserResponseDTO } from "./login-user.dto";
 import { UserRepository } from "@repositories/user/user.repository";
@@ -30,28 +30,24 @@ class LoginUserUsecase {
     } catch (error) {
       if (error instanceof z.ZodError) {
         Report.Error(
-          new AppError(
-            StatusCode.BadRequest,
-            error.issues
-              .map((validation) => validation.message)
-              .toString()
-              .replace(/,/g, ", "),
-            "login-user-usecase",
-          ),
+          error.issues
+            .map((validation) => validation.message)
+            .toString()
+            .replace(/,/g, ", "),
+          StatusCode.BadRequest,
+          "login-user-usecase",
         );
       }
-      throw error;
+      return null;
     }
 
     const findUser = await this.userRepository.findByEmail(email);
 
     if (!findUser) {
       Report.Error(
-        new AppError(
-          StatusCode.Unauthorized,
-          "User not a found",
-          "login-user-usecase",
-        ),
+        "User not a found",
+        StatusCode.Unauthorized,
+        "login-user-usecase",
       );
 
       return null;
@@ -61,11 +57,9 @@ class LoginUserUsecase {
 
     if (!validPassword) {
       Report.Error(
-        new AppError(
-          StatusCode.Unauthorized,
-          "Email or password are is incorrect",
-          "login-user-usecase",
-        ),
+        "Email or password are is incorrect",
+        StatusCode.Unauthorized,
+        "login-user-usecase",
       );
 
       return null;

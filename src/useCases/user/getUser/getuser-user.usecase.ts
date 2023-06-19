@@ -1,7 +1,7 @@
 import { provide } from "inversify-binding-decorators";
 import { UserRepository } from "@repositories/user/user.repository";
 import { IGetUserResponseDTO } from "./getuser-user.dto";
-import { AppError, Report, StatusCode } from "@expressots/core";
+import { Report, StatusCode } from "@expressots/core";
 
 @provide(GetUserUseCase)
 class GetUserUseCase {
@@ -13,11 +13,9 @@ class GetUserUseCase {
 
     if (!user) {
       Report.Error(
-        new AppError(
-          StatusCode.NotFound,
-          "User not found",
-          "create-user-usecase",
-        ),
+        "User not found",
+        StatusCode.NotFound,
+        "create-user-usecase",
       );
     }
 

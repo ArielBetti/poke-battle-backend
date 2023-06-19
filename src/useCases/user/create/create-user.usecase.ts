@@ -1,4 +1,4 @@
-import { AppError, Report, StatusCode } from "@expressots/core";
+import { Report, StatusCode } from "@expressots/core";
 import { provide } from "inversify-binding-decorators";
 import { ICreateUserDTO, ICreateUserResponseDTO } from "./create-user.dto";
 import { UserRepository } from "@repositories/user/user.repository";
@@ -58,11 +58,9 @@ class CreateUserUseCase {
 
       if (findUser) {
         Report.Error(
-          new AppError(
-            StatusCode.BadRequest,
-            "User already exists",
-            "create-user-usecase",
-          ),
+          "User already exists",
+          StatusCode.BadRequest,
+          "create-user-usecase",
         );
       }
 
@@ -74,11 +72,9 @@ class CreateUserUseCase {
 
       if (!user) {
         Report.Error(
-          new AppError(
-            StatusCode.BadRequest,
-            "Registry error",
-            "create-user-usecase",
-          ),
+          "Registry error",
+          StatusCode.BadRequest,
+          "create-user-usecase",
         );
       }
 
@@ -106,14 +102,12 @@ class CreateUserUseCase {
     } catch (error: any) {
       if (error instanceof z.ZodError) {
         Report.Error(
-          new AppError(
-            StatusCode.BadRequest,
-            error.issues
-              .map((validation) => validation.message)
-              .toString()
-              .replace(/,/g, ", "),
-            "create-user-usecase",
-          ),
+          error.issues
+            .map((validation) => validation.message)
+            .toString()
+            .replace(/,/g, ", "),
+          StatusCode.BadRequest,
+          "create-user-usecase",
         );
       }
       throw error;
